@@ -5,4 +5,4 @@ Science Society.
 
 ## Presentations
 
-  * [Who's Hacking Who?](presentations/whos-hacking-who.pdf)
+  * [Who's Hacking Who?](presentations/whos-hacking-who/presentation.pdf)
