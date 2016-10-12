@@ -1,0 +1,7 @@
+# Ignore files
+*.aux
+*.log
+*.nav
+*.out
+*.snm
+*.toc
