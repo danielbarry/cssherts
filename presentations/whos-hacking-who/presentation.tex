@@ -8,6 +8,7 @@
 \usecolortheme{seagull}
 \beamertemplatenavigationsymbolsempty
 \setbeamertemplate{blocks}[rounded][shadow=false]
+\setbeamertemplate{bibliography item}{\insertbiblabel}
 
 \definecolor{Blue}{rgb}{0.0, 0.0, 0.8}
 \definecolor{DarkGreen}{rgb}{0.0, 0.5, 0.0}
@@ -149,7 +150,17 @@
   \end{frame}
   \begin{frame}
     \frametitle{Targets of Hacking}
-    \textbf{TODO:} Write this section.
+    \centering
+    \begin{tabular}{c c}
+      \includegraphics[height=2cm,width=3cm,keepaspectratio]{dyn.png}        &
+      \includegraphics[height=2cm,width=3cm,keepaspectratio]{ovh.png}       \\
+      DYN \cite{dyndns}                                                      &
+      OVH \cite{ovhcld}                                                     \\
+      \includegraphics[height=2cm,width=3cm,keepaspectratio]{wikileaks.jpeg} &
+      \includegraphics[height=2cm,width=3cm,keepaspectratio]{janet.png}     \\
+      WikiLeaks \cite{wiklks}                                                &
+      JANET \cite{janisp}                                                   \\
+    \end{tabular}
   \end{frame}
   \begin{frame}
     \frametitle{Attacks on Servers}
@@ -216,5 +227,30 @@ public static void main(String[] args){
       \centering
       Any questions?
     \end{block}
+  \end{frame}
+  \begin{frame}
+    \frametitle{References}
+    \begin{thebibliography}{}
+      \bibitem{dyndns}
+        Paganini, P.
+        ``150,000 IoT Devices behind the 1Tbps DDoS attack on OVH",
+        URL: \url{http://securityaffairs.co/wordpress/51726/cyber-crime/ovh-hit-botnet-iot.html?},
+        2016.
+      \bibitem{ovhcld}
+        York, K.
+        ``Dyn Statement on 10/21/2016 DDoS Attack",
+        URL: \url{http://dyn.com/blog/dyn-statement-on-10212016-ddos-attack/},
+        2016.
+      \bibitem{wiklks}
+        WikiLeaks.
+        ``WikiLeaks",
+        URL: \url{https://www.wikileaks.org/},
+        2016.
+      \bibitem{janisp}
+        Martin, A.
+        ``UK research network Janet under ongoing and persistent DDoS attack",
+        URL: \url{http://www.theregister.co.uk/2015/12/07/janet_under_persistent_ddos_attack/},
+        2016.
+    \end{thebibliography}
   \end{frame}
 \end{document}
