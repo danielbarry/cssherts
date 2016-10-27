@@ -186,16 +186,51 @@
     \end{itemize}
   \end{frame}
   \begin{frame}
-    \frametitle{Virtual Machine}
-    \textbf{TODO:} Write this section.
+    \frametitle{Dev Virtual Machine}
+    \centering
+    \includegraphics[width=8cm,keepaspectratio]{tiny-core-vm.png}
+    \\
+    And if run:
+    \\
+    \includegraphics[width=8cm,keepaspectratio]{tiny-core-run.png}
   \end{frame}
-  \begin{frame}
+  \begin{frame}[fragile=singleslide]
     \frametitle{Running}
-    \textbf{TODO:} Write this section.
+    \centering
+    \begin{lstlisting}[caption=Root Access,language=Bash]
+tc@box:~$ sudo -s
+root@box:/home/tc#
+    \end{lstlisting}
+    \begin{lstlisting}[caption=Saveable Location,language=Bash]
+root@box:/home/tc# cd /mnt/sda1/home/tc
+root@box:/mnt/sda1/home/tc#
+    \end{lstlisting}
+    \begin{lstlisting}[caption=Setup Network,language=Bash]
+root@box:/home/tc# ash setup.sh
+    \end{lstlisting}
+  \end{frame}
+  \begin{frame}[fragile=singleslide]
+    \frametitle{Test Virtual Machine}
+    \centering
+    \begin{lstlisting}[caption=Root Access,language=Bash]
+tc@box:~$ sudo -s
+root@box:/home/tc#
+    \end{lstlisting}
+    \begin{lstlisting}[caption=Setup Netork,language=Bash]
+root@box:/home/tc# ifconfig eth0 192.168.1.100 netmask 255.255.255.0 broadcast 192.168.1.255 up
+    \end{lstlisting}
+    Both machines should now be able to ping one another.
   \end{frame}
   \begin{frame}
     \frametitle{Basics of Linux}
-    \textbf{TODO:} Write this section.
+    \begin{itemize}
+      \item `\texttt{cd [DIRECTORY]}' - ``Change Directory"
+      \item `\texttt{nano [FILE]}' - Simple text editor
+      \item `\texttt{tce-ab}' - Search for packages
+      \item `\texttt{tce-load -wi [PACKAGE]}' - Install a package
+      \item `\texttt{[CMD] --help}' - Produces help for a command
+      \item `\texttt{[CMD] > [FILE]}' - Save output of command to file
+    \end{itemize}
   \end{frame}
   \begin{frame}
     \frametitle{Tools}
