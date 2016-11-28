@@ -1,5 +1,7 @@
 # Ignore files
 *.aux
+*.class
+*.jar
 *.log
 *.nav
 *.out
