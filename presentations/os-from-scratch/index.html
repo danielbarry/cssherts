@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<script type="text/javascript" src="loader.js"></script>
+<link rel="icon" type="image/png" href="icon.png">
+<link rel="stylesheet" type="text/css" href="style.css">
+<title>X86 Operating System From Scratch</title>
+</head>
+<body onload="Loader();">
+<xmp name="md"># X86 Operating System From Scratch
+
+**NOTE:** This book is not yet complete, incomplete sections are marked with "TODO".
+
+![Title Image](title.png)
+
+## Introduction
+
+The purpose of this introduction is to set scene for what should hopefully be an enjoyable delve into the world of operating systems and operating system design. This book does not represent ground breaking research by an means at the time of writing, but could be considered an insight into the history of how we got here and should start to build a basic understanding of the complexities of operating systems and operating system design.
+
+How this book differs from others is it tries to assume as little as possible, with only requiring a simple background in programming and data structures. That said, even this is something that a smart individual may not need in order to understand this book. Another place in which this book differs from others is the speed at which we attempt to cover subjects. A competent programmer could complete this book in an extremely short amount of time, as a lot of the theory could be skipped and simply the code read to gain an understanding. Less able readers may take longer, but in general the journey taken should be as short as the individual needs in order to cover this subject.
+
+It is recommended that you read this book from start to finish and do the practicals as and when they appear in the book, as this is how the book was designed to be used. In the section "Book Layout" you will also see more detail about how this book is formatted in order for key information to be recognised in the text. Once comfortable with the text in that section, it is then suggested that you tackle the text at your own pace.
+
+### Book Layout
+
+This section contains information about the formatting of this book. It is highly recommended that you read this section in it's entirety before picking and choosing which parts of this book are appropriate to you in order for the other sections in this book to make sense.
+
+#### In-line Code
+
+In-line code can be either an explanation of code seen in a "Code Block" or complete in it's own right. It should represent something that is something a machine would understand, but also be too short that it doesn't make sense to be in it's own code block.
+
+The formatting is as follows:
+
+`Code Here`
+
+In context, this may be used as follows:
+
+You may want to move the value to the `AX` register.
+
+#### Code Block
+
+A code block should be one line or many, although if it is one line it should be of a considerable length such that it would not format well as "In-line Code". Like the in-line code, this text represents something that a machine would understand.
+
+The formatting is as follows:
+
+    Code Here
+    More Code Here
+
+In context, this may be used as follows:
+
+    ; Make AL equal to 21
+    mov al, 10
+    add al, 10
+    inc al
+
+#### Notes
+
+Notes should represent something that you can choose to read or not. They usually are relatively small but can be very useful and read as advice.
+
+The formatting is as follows:
+
+**NOTE:** Text Here.
+
+In context, this may be used as follows:
+
+**NOTE:** Be sure to read the rest of this section.
+
+#### Warnings
+
+Warnings are something you are highly suggested to read. Some things we do may be dangerous, or simply cost you time or effort if you get them wrong. Sure, you don't have to read them - but if something goes terribly wrong the responsibility is on you. It doesn't matter how experienced or intelligent you are, mistakes are a very human aspect we all share.
+
+The formatting is as follows:
+
+**WARNING:** Text Here.
+
+In context, this may be used as follows:
+
+**WARNING:** Do not skip over these messages.
+
+### What Is An OS?
+
+We'll first start by defining a selection of OSes exist out there, which should make the explanation easier for most people out there. The following are very popular operating systems (the list is far from complete):
+
+  * Android (Google)
+  * DOS (Microsoft)
+  * iOS (Apple)
+  * Linux
+  * Mac OS (Apple)
+  * Windows (Microsoft)
+
+Hopefully at least one of those rings a bell, better still you've used one of these at some point.
+
+The core job of an OS is to provide a level of abstraction from the hardware it's running on. This can be an extremely simple level of abstraction, meaning the underlying is still very much visible, all the way to a program having no idea what computer it is running on.
+
+The reason for this abstraction is to allow a program to easily be used on a piece of hardware without having to worry about the hardware's specifics, allow multiple programs to easily be run on the same platform and for many OSes it will also allow for multiple programs to be run at the same time with minimal awareness of the fact (in most cases).
+
+We will concentrate on getting simple programs to run fairly oblivious to the hardware they are running on - but more on this later.
+
+### Why Build An OS?
+
+There are many reasons to build an operating system (OS) and those reasons will vary depending on who you are and what your goals are. Here are just the few of those:
+
+  * *General curiosity* - These computer things surround us everywhere in desktops, laptops, phones, microwaves, routers, vacuum cleaners, watches, toasters, washing machines, light bulbs - the list really does go on. These are just things you have in your modern home, most of which will be running one of many different types of operating system.
+  * *Advancing knowledge* - This is a rather pure pursuit and a difficult thing to do. This book will try to guide you by using understandable English for the most part and attempting to describe concepts in ways that are understandable. For those that are already advanced, this can be a quick and satisfying journey to adding another notch to your rather formidable belt.
+  * *Fun project* - Here we should hopefully not only complete the task of creating a fun side project, but also motivate many future side projects! Once you have read and understood this book, without a doubt you will have more questions than what you started off with. This is of course good and is what drives Science and explorers of the unknown in general.
+  * *I always wanted my own [My Name] OS* - Doesn't everybody? By the end of this book you should have something to show the nerdiest of your friends, colleagues, students or family. For those who do not know, some of this can also seem like impossible magic.
+  * *I want to be [Bill Gates/Steve Jobs/Linus Torvalds]* - Whilst not an easy thing to do, it's also not impossible. New ideas happen all the time and they often come from surprising places, all of which share in common some dedicated and motivated individual/s that allowed these large goals to become reality.
+
+If you don't consider yourself to be one of these categories, you are also welcome. At the end of this book will be general information, some of which will contain various contact information. Please be sure to explain what has motivated you to pick up this book and we will look to adding it to the list.
+
+### What OS Will We Build?
+
+Please bare in mind that the following may require some technical knowledge that will be learned during the development of this system. If you see words or concepts you don't understand, we will visit them later. For those in the know, we thought it best to justify design decisions before starting so that the design decisions make sense if you choose to jump further ahead.
+
+The Operating System we plan to build is the following, with the attached reasoning:
+
+  * *16 Bit* - The registers, memory model and boot process is much simpler for a 16 bit OS. Switching to 32 bit requires more knowledge and comes with it's own difficulties, including but not limited to the supported instruction sets for 32 bit machines not always being the same. The X86 architecture is old and gold, with it's standard well defined. It's likely that we would be able to run our code on any desktop/laptop computer built within the last 10 years with an Intel processor.
+  * *16kB RAM* - This means that any machine that supports the architecture would also have enough RAM to run our system, also meaning that we don't have to switch to different memory contexts which is required for addressing larger amounts of RAM.
+  * *Custom File System* - For a simple OS, we don't care about file sizes, when the file was created, who created it, who has permission to edit it, etc. We care about the name and where it's stored. For this reason, we can keep the file table (more on this later) small and store it completely in our small amount of RAM.
+  * *Command Line* - It is possible to draw graphics in 16 bit mode and quite good graphics at that - what becomes difficult is providing an interface in this mode that is fast enough to be usable. This requires more effort and defeats the object of this book.
+  * *Monolithic* - The kernel will only be able to run one program at a time. This is again for the ease of the reader, as debugging a program with multiple threads can become a headache for anybody. Design wise, we also don't need to then create task switching capability, memory management, shared resources, etc.
+
+## Build Environment
+
+A build environment is simply a place where we will build our system (or any software). The reason for creating this environment is we will need specific tools to achieve our goals, something most operating systems are not capable of out of the box. The reason for this is that most users will not want to do anything this advanced - so consider yourself one of the privileged few who will venture under the hood of the computer!
+
+### Windows
+
+**TODO:** Write this section.
+
+### Linux
+
+**TODO:** Write this section.
+
+### Mac
+
+**TODO:** Write this section.
+
+## File System
+
+**TODO:** Write this section.
+
+## Bootloader
+
+**TODO:** Write this section.
+
+### Boot Process
+
+**TODO:** Write this section.
+
+### RAM Layout
+
+**TODO:** Write this section.
+
+### Operations
+
+**TODO:** Write this section.
+
+### Simple Bootloader
+
+**TODO:** Write this section.
+
+### Booting the Kernel
+
+**TODO:** Write this section.
+
+## Kernel
+
+**TODO:** Write this section.
+
+## Programs
+
+**TODO:** Write this section.
+
+### Hello World (`test`)
+
+**TODO:** Write this section.
+
+### File Viewer (`ls`)
+
+**TODO:** Write this section.
+
+### Cat (`cat`)
+
+**TODO:** Write this section.
+
+## The Future
+
+Firstly, congratulations on getting this far. You now have a working operating system, upload it to the internet and see where it takes you! Show your friends, family, colleagues, class mates, children, cats, plants - let them all know what you have achieved.
+
+But now you may be wondering, "What next?"... Well, the journey is not yet over and if you want to continue - all the more to you. The following is a list of ideas that could be extended on the make this system much better.
+
+  * *More Programs* - You can never have enough programs! How about a simple text editor, simple game, serial port program - the list goes on. Anything you can think of can be created, given enough time. You will start to run into some limitations though, the first being the kernel...
+  * *Kernel* - Extend on the kernel, multi-core support, memory management, drivers, GUI support, etc. You'll have to do some additional reading for these concepts, but it's worth it.
+  * *Internet* - Computers really got interesting once we connected them together and how else better to test your programming skills than to connect your newly formed operating system to the rest of the world? Start simple with a telnet server and see how far you can go!
+</xmp>
+</body>
+</html>
