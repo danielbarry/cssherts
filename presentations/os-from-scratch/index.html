@@ -125,19 +125,17 @@ The Operating System we plan to build is the following, with the attached reason
 
 A build environment is simply a place where we will build our system (or any software). The reason for creating this environment is we will need specific tools to achieve our goals, something most operating systems are not capable of out of the box. The reason for this is that most users will not want to do anything this advanced - so consider yourself one of the privileged few who will venture under the hood of the computer!
 
-### Windows
+### VirtualBox
 
-**TODO:** Write this section.
+To keep things simple, here we will suggest the use of [VirtualBox](https://www.virtualbox.org), which can be downloaded from [https://www.virtualbox.org/wiki/Downloads](https://www.virtualbox.org/wiki/Downloads). The idea is that we should be able to abstract your choice of Operating System from the work we wish to do in this book. Of course this can be done on the native operating system, but explaining how to do this three or more times for each step is somewhat tedious. For the simplicity of the book, we will be using a very small Linux operating system to do our tests. Insider that operating system, we will then run another virtual machine to minimise the risk to your real machine (as we will discuss later, there is the potential to wipe you bootloader and partition table if care is not taken).
 
-### Linux
+VirtualBox has been chosen for being open source, supporting Windows, OS X, Linux and Solaris - it seems to be the best compromise. There are of course others, but when in doubt we all tend to stick with what we know. Once downloaded and installed, we can now look to download the image we will use to run the system.
 
-**TODO:** Write this section.
+### Development Environment
 
-### Mac
+The image can be found at [http://coffeespace.org.uk/downloads/os-from-scratch.zip](http://coffeespace.org.uk/downloads/os-from-scratch.zip), which you should be able to load into VirtualBox once decompressed from a ZIP. For more advanced users, we are simply using [Tiny Core Linux](http://tinycorelinux.net) to make the resources accessible to as many people as possible.
 
-**TODO:** Write this section.
-
-## File System
+**NOTE:** This image will have minimal security upgrades added to it since initial publishing - it is highly recommended that you do not connect it to the internet. If you do find yourself needing to do so for some reason, please consider either developing on your local machine or upgrading the box first so that it is secure. Alternatives for your local machine exist for all tools we use here.
 
 **TODO:** Write this section.
 
