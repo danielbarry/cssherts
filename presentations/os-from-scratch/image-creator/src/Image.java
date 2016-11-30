@@ -17,6 +17,8 @@ import java.util.HashMap;
 public class Image{
   private static final int BOOTSIZE = 512;
   private static final int TABLESIZE = 512;
+  private static final int NAMESIZE = 4;
+  private static final int CHUNKSIZE = 512;
 
   private File bootloader;
   private File output;
