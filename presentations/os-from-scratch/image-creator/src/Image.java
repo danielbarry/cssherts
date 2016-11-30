@@ -212,8 +212,8 @@ public class Image{
   public boolean generate(){
     /* Generate a byte array the size of the target media */
     byte[] buffer = new byte[mediaSize];
+    /* TODO: Push resources into their respect positions. */
     /* TODO: Generate the file table to be used. */
-    /* TODO: Push resources down the output stream. */
     /* TODO: Validate the image that has been generated. */
     /* Create and write output stream */
     FileOutputStream fos = null;
