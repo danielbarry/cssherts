@@ -214,6 +214,16 @@ public class Image{
   public boolean generate(){
     /* Generate a byte array the size of the target media */
     byte[] buffer = new byte[mediaSize];
+    int bPos = 0;
+    /* Store the order of the files to be added to the file table */
+    ArrayList<String> filenames = new ArrayList<String>();
+    /* Add the bootloader to the image */
+    int writeSize = loadBuffer(bPos, CHUNKSIZE, buffer, bootloader);
+    if(writeSize < 0){
+      return false;
+    }else{
+      bPos += writeSize;
+    }
     /* TODO: Push resources into their respect positions. */
     /* TODO: Generate the file table to be used. */
     /* TODO: Validate the image that has been generated. */
