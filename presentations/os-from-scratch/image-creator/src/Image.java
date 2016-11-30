@@ -243,9 +243,30 @@ public class Image{
         filenames.add(files.get(x).getName());
       }
     }
-    /* TODO: Add the bootloader to the table. */
-    /* TODO: Add the table to the table. */
-    /* TODO: Add the files to the table. */
+    /* Add the bootloader to the table */
+    byte[] fn = cutAndPad(bootloader.getName(), NAMESIZE, '\0').getBytes();
+    int tPos = 0;
+    for(int x = 0; x < fn.length; x++){
+      buffer[(int)(bootloader.length() + tPos + x)] = fn[x];
+    }
+    tPos += NAMESIZE;
+    /* Add the table to the table */
+    String tableName = "tble";
+    for(int y = 0; y < tableSize / CHUNKSIZE; y++){
+      fn = cutAndPad(tableName, NAMESIZE, '\0').getBytes();
+      for(int x = 0; x < fn.length; x++){
+        buffer[(int)(bootloader.length() + tPos + x)] = fn[x];
+      }
+      tPos += NAMESIZE;
+    }
+    /* Add the files to the table */
+    for(int y = 0; y < filenames.size(); y++){
+      fn = cutAndPad(filenames.get(y), NAMESIZE, '\0').getBytes();
+      for(int x = 0; x < fn.length; x++){
+        buffer[(int)(bootloader.length() + tPos + x)] = fn[x];
+      }
+      tPos += NAMESIZE;
+    }
     /* TODO: Validate the image that has been generated. */
     /* Create and write output stream */
     OutputStream os = null;
