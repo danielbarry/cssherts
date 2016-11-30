@@ -232,7 +232,9 @@ public class Image{
     }
     bPos += tableSize;
     /* TODO: Push resources into their respect positions. */
-    /* TODO: Generate the file table to be used. */
+    /* TODO: Add the bootloader to the table. */
+    /* TODO: Add the table to the table. */
+    /* TODO: Add the files to the table. */
     /* TODO: Validate the image that has been generated. */
     /* Create and write output stream */
     OutputStream os = null;
