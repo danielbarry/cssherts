@@ -177,6 +177,12 @@ public class Main{
       "\n" +
       "\n    FILE" +
       "\n      Adds a file to the image to be created." +
+      "\n" +
+      "\n    Additional" +
+      "\n      Meaning of tags:" +
+      "\n        [ADD] The addition of something." +
+      "\n        [SET] A setting was updated." +
+      "\n        [ERR] An error occurred." +
       "\n"
     );
     exit();
