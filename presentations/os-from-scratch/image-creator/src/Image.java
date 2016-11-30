@@ -273,4 +273,27 @@ public class Image{
     }
     return paddedSize;
   }
+
+  /**
+   * cutAndPad()
+   *
+   * Cut the string to the desired length and pad it if it is not long enough
+   * to fill the cut length.
+   *
+   * @param str The string to be cut and padded.
+   * @param len The length to cut the string to.
+   * @param pad The padding to use on the string.
+   * @return The cut and padded string.
+   **/
+  private String cutAndPad(String str, int len, char pad){
+    if(str.length() >= len){
+      return str.substring(0, len);
+    }else{
+      String buf = "";
+      for(int x = str.length(); x < len; x++){
+        buf += pad;
+      }
+      return str + buf;
+    }
+  }
 }
