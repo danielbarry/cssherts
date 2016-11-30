@@ -233,4 +233,44 @@ public class Image{
     }
     return true;
   }
+
+  /**
+   * loadBuffer()
+   *
+   * Loads a file from the disk into the buffer at a given position, padding
+   * the file out to the chunk size for the media. This method then returns the
+   * size of the file it wrote with the padding.
+   *
+   * @param offset The offset to inset the file at.
+   * @param chunkSize The chunk size for the media.
+   * @param buffer The buffer to insert the file into.
+   * @param file The file to be added to the buffer.
+   * @return The size of the file written to the buffer, -1 on error. This
+   * method will also write to the error stream with a more detailed
+   * explanation of the failure.
+   **/
+  private int loadBuffer(int offset, int chunkSize, byte[] buffer, File file){
+    /* Calculate the padding */
+    int paddedSize = (int)file.length();
+    if(file.length() % chunkSize > 0){
+      paddedSize += chunkSize - (file.length() % chunkSize);
+    }
+    /* Load the file into the buffer */
+    InputStream is = null;
+    try{
+      is = new FileInputStream(file);
+      is.read(buffer, offset, paddedSize);
+    }catch(IOException e){
+      System.err.println("[ERR] Could not read `" + file.getName() + "`");
+      return -1;
+    }
+    try{
+      if(is != null){
+        is.close();
+      }
+    }catch(IOException e){
+      /* Do nothing */
+    }
+    return paddedSize;
+  }
 }
