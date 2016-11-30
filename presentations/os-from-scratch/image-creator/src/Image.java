@@ -1,7 +1,11 @@
 package barray.ic;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Image.java
@@ -99,12 +103,99 @@ public class Image{
    * @return Whether this image is valid and could generate a valid image.
    **/
   public boolean isValid(){
-    /* TODO: Check whether bootloader is:
-               * 512 bytes in size
-               * Has the descriptor word */
-    /* TODO: Check that each of the files exists. */
-    /* TODO: Check that there are no repeats in the filenames. */
-    return false;
+    /* Check that the bootloader exists */
+    if(!bootloader.exists()){
+      System.err.println("[ERR] The bootloader does not exist");
+      return false;
+    }
+    if(!bootloader.isFile()){
+      System.err.println("[ERR] The bootloader is not a file");
+      return false;
+    }
+    if(!bootloader.canRead()){
+      System.err.println("[ERR] The bootloader cannot be read");
+      return false;
+    }
+    /* Check that each of the files exists */
+    for(int x = 0; x < files.size(); x++){
+      File file = files.get(x);
+      if(!file.exists()){
+        System.err.println("[ERR] `" + file.getName() + "` does not exist");
+        return false;
+      }
+      if(!file.isFile()){
+        System.err.println("[ERR] `" + file.getName() + "` is not a file");
+        return false;
+      }
+      if(!file.canRead()){
+        System.err.println("[ERR] `" + file.getName() + "` cannot be read");
+        return false;
+      }
+    }
+    /* Bootloader is 512 bytes in size */
+    if(bootloader.length() != BOOTSIZE){
+      System.err.println("[ERR] The bootloader is not 512 bytes");
+      return false;
+    }
+    /* Bootloader has descriptor word */
+    InputStream fis = null;
+    try{
+      fis = new FileInputStream(bootloader);
+    }catch(IOException e){
+      System.err.println("[ERR] Unable to read bootloader");
+      return false;
+    }
+    byte[] buffer = new byte[BOOTSIZE];
+    try{
+      fis.read(buffer, 0, BOOTSIZE);
+    }catch(IOException e){
+      System.err.println("[ERR] Unable to read bootloader bytes");
+      return false;
+    }
+    try{
+      fis.close();
+    }catch(IOException e){
+      /* Do nothing */
+    }
+    if((buffer[510] & 0xFF) != 170 || (buffer[511] & 0xFF) != 85){
+      System.err.println("[ERR] Incorrect bootloader descriptor");
+      return false;
+    }
+    /* Check that there are no repeats in the filenames */
+    HashMap<String, File> filenames = new HashMap<String, File>();
+    for(int x = 0; x < files.size(); x++){
+      String file = files.get(x).getName();
+      if(filenames.get(file) == null){
+        filenames.put(file, files.get(x));
+      }else{
+        System.err.println("[ERR] `" + file + "` exists more than once");
+        return false;
+      }
+    }
+    /* Check the output stream won't overwrite a file */
+    if(output.exists()){
+      System.err.println("[ERR] Output file would be overwritten");
+      return false;
+    }
+    /* Check that the media size is large enough for the files */
+    long totalFileSize = bootloader.length() + TABLESIZE;
+    for(int x = 0; x < files.size(); x++){
+      totalFileSize += files.get(x).length();
+    }
+    if(totalFileSize > mediaSize){
+      System.err.println("[ERR] Files too large for target media");
+      return false;
+    }
+    /* Check if the media size is okay to use in RAM */
+    /* NOTE: http://stackoverflow.com/questions/12807797/java-get-available-memory#12807848 */
+    long allocatedMemory = Runtime.getRuntime().totalMemory() -
+      Runtime.getRuntime().freeMemory();
+    long freeMemory = Runtime.getRuntime().maxMemory() - allocatedMemory;
+    if(mediaSize > freeMemory){
+      System.err.println("[ERR] JVM doesn't have enough RAM to process media");
+      return false;
+    }
+    return true;
   }
 
   /**
