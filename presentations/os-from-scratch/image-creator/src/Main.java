@@ -126,6 +126,8 @@ public class Main{
     System.out.println("[SET] bootloader -> " + bootloader);
     image.setOutput(output);
     System.out.println("[SET] output -> " + output);
+    image.setMediaSize(mediaSize);
+    System.out.println("[SET] mediaSize -> " + mediaSize);
     /* Build an image if possible */
     if(image.isValid()){
       if(image.generate()){
