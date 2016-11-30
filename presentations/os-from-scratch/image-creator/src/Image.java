@@ -48,7 +48,22 @@ public class Image{
    * @param file The path of the bootloader to be added.
    **/
   public void setBootloader(String file){
-    /* TODO: Write this section. */
+    /* Set the bootloader */
+    bootloader = new File(file);
+    /* Find bootloader if it exists */
+    int remove = -1;
+    for(int x = 0; x < files.size(); x++){
+      if(files.get(x).getName().equals(bootloader.getName())){
+        remove = x;
+        break;
+      }
+    }
+    /* Remove the file from the normal list if it was found */
+    if(remove >= 0){
+      System.out.println("[DEL] `" + files.get(remove).getName() + "`");
+      bootloader = files.get(remove);
+      files.remove(remove);
+    }
   }
 
   /**
