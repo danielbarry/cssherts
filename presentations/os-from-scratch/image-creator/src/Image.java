@@ -161,7 +161,7 @@ public class Image{
     }catch(IOException e){
       /* Do nothing */
     }
-    if((buffer[510] & 0xFF) != 170 || (buffer[511] & 0xFF) != 85){
+    if((buffer[510] & 0xFF) != 85 || (buffer[511] & 0xFF) != 170){
       System.err.println("[ERR] Incorrect bootloader descriptor");
       return false;
     }
