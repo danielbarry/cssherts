@@ -169,6 +169,9 @@ public class Main{
       "\n      -o" +
       "\n      --output        Set the output" +
       "\n                      Default: " + OUTPUT +
+      "\n      -s" +
+      "\n      --size          Set the media size (bytes)" +
+      "\n                      Default: " + MEDIASIZE +
       "\n      -v" +
       "\n      --version       Program version" +
       "\n" +
