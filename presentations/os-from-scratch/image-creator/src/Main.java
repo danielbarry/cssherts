@@ -9,9 +9,11 @@ package barray.ic;
 public class Main{
   private static final String BOOTLOADER = "boot.bin";
   private static final String OUTPUT = "os.img";
+  private static final int MEDIASIZE = 1474560;
 
   private String bootloader;
   private String output;
+  private int mediaSize;
   private Image image;
 
   /**
@@ -38,6 +40,7 @@ public class Main{
     /* Initialise the variables */
     bootloader = BOOTLOADER;
     output = OUTPUT;
+    mediaSize = MEDIASIZE;
     image = new Image();
     /* Check that there is at least one command line argument */
     if(args.length <= 0){
@@ -81,6 +84,22 @@ public class Main{
                 output = args[x];
               }else{
                 System.err.println("[ERR] Cannot set output");
+                printHelp();
+              }
+              break;
+            case "-s" :
+            case "--size" :
+              /* Make sure we have enough parameters */
+              if(++x < args.length){
+                /* Try to store the output */
+                try{
+                  mediaSize = Integer.parseInt(args[x]);
+                }catch(NumberFormatException e){
+                  System.err.println("[ERR] Invalid size number");
+                  printHelp();
+                }
+              }else{
+                System.err.println("[ERR] Cannot set media size");
                 printHelp();
               }
               break;
