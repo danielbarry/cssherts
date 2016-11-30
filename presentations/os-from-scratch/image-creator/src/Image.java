@@ -209,6 +209,8 @@ public class Image{
    * @return Whether the generation was successful.
    **/
   public boolean generate(){
+    /* Generate a byte array the size of the target media */
+    byte[] buffer = new byte[mediaSize];
     /* TODO: Generate the file table to be used. */
     /* TODO: Create output stream. */
     /* TODO: Push resources down the output stream. */
