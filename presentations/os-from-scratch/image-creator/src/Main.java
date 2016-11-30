@@ -111,8 +111,11 @@ public class Main{
     System.out.println("[SET] output -> " + output);
     /* Build an image if possible */
     if(image.isValid()){
-      image.generate();
-      System.out.println("[>>>] Finished generation");
+      if(image.generate()){
+        System.out.println("[>>>] Finished generation");
+      }else{
+        System.err.println("[ERR] Unable to generate image");
+      }
     }else{
       System.err.println("[ERR] Image is invalid, no image will be created");
     }
