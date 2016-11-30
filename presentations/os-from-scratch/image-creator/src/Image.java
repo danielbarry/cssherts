@@ -234,17 +234,17 @@ public class Image{
     /* TODO: Generate the file table to be used. */
     /* TODO: Validate the image that has been generated. */
     /* Create and write output stream */
-    FileOutputStream fos = null;
+    OutputStream os = null;
     try{
-      fos = new FileOutputStream(output);
-      fos.write(buffer);
+      os = new FileOutputStream(output);
+      os.write(buffer);
     }catch(IOException e){
       System.err.println("[ERR] Can't write to output file");
       return false;
     }
     try{
-      if(fos != null){
-        fos.close();
+      if(os != null){
+        os.close();
       }
     }catch(IOException e){
       /* Do nothing */
