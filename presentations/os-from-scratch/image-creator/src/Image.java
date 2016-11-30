@@ -59,7 +59,7 @@ public class Image{
    * @param file The path of the output file to be generated..
    **/
   public void setOutput(String file){
-    /* TODO: Write this section. */
+    output = new File(file);
   }
 
   /**
