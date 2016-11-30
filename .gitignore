@@ -2,6 +2,7 @@
 *.aux
 *.bin
 *.class
+*.img
 *.jar
 *.log
 *.nav
