@@ -231,7 +231,18 @@ public class Image{
       tableSize += CHUNKSIZE - (TABLESIZE % CHUNKSIZE);
     }
     bPos += tableSize;
-    /* TODO: Push resources into their respect positions. */
+    /* Push resources into their respect positions */
+    for(int x = 0; x < files.size(); x++){
+      writeSize = loadBuffer(bPos, CHUNKSIZE, buffer, files.get(x));
+      if(writeSize < 0){
+        return false;
+      }else{
+        bPos += writeSize;
+      }
+      for(int y = 0; y < writeSize / CHUNKSIZE; y++){
+        filenames.add(files.get(x).getName());
+      }
+    }
     /* TODO: Add the bootloader to the table. */
     /* TODO: Add the table to the table. */
     /* TODO: Add the files to the table. */
