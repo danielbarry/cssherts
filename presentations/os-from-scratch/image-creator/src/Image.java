@@ -299,7 +299,8 @@ public class Image{
    * cutAndPad()
    *
    * Cut the string to the desired length and pad it if it is not long enough
-   * to fill the cut length.
+   * to fill the cut length. This method will also remove the file extension if
+   * it exists (anything after the first dot).
    *
    * @param str The string to be cut and padded.
    * @param len The length to cut the string to.
@@ -307,14 +308,15 @@ public class Image{
    * @return The cut and padded string.
    **/
   private String cutAndPad(String str, int len, char pad){
+    int dot = str.indexOf('.');
+    str = str.substring(0, dot > 0 ? dot : str.length());
     if(str.length() >= len){
       return str.substring(0, len);
     }else{
-      String buf = "";
       for(int x = str.length(); x < len; x++){
-        buf += pad;
+        str += pad;
       }
-      return str + buf;
+      return str;
     }
   }
 }
