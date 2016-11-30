@@ -261,6 +261,7 @@ public class Image{
     }
     /* Add the files to the table */
     for(int y = 0; y < filenames.size(); y++){
+      /* TODO: Check that tPos hasn't run over the allocated table space. */
       fn = cutAndPad(filenames.get(y), NAMESIZE, '\0').getBytes();
       for(int x = 0; x < fn.length; x++){
         buffer[(int)(bootloader.length() + tPos + x)] = fn[x];
