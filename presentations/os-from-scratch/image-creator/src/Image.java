@@ -139,22 +139,22 @@ public class Image{
       return false;
     }
     /* Bootloader has descriptor word */
-    InputStream fis = null;
+    InputStream is = null;
     try{
-      fis = new FileInputStream(bootloader);
+      is = new FileInputStream(bootloader);
     }catch(IOException e){
       System.err.println("[ERR] Unable to read bootloader");
       return false;
     }
     byte[] buffer = new byte[BOOTSIZE];
     try{
-      fis.read(buffer, 0, BOOTSIZE);
+      is.read(buffer, 0, BOOTSIZE);
     }catch(IOException e){
       System.err.println("[ERR] Unable to read bootloader bytes");
       return false;
     }
     try{
-      fis.close();
+      is.close();
     }catch(IOException e){
       /* Do nothing */
     }
