@@ -15,6 +15,7 @@ public class Image{
 
   private File bootloader;
   private File output;
+  private int mediaSize;
   private ArrayList<File> files;
 
   /**
@@ -75,6 +76,17 @@ public class Image{
    **/
   public void setOutput(String file){
     output = new File(file);
+  }
+
+  /**
+   * setMediaSize()
+   *
+   * Sets the media size for the target device.
+   *
+   * @param size The size of the media in bytes to be generated.
+   **/
+  public void setMediaSize(int size){
+    mediaSize = size;
   }
 
   /**
