@@ -33,6 +33,7 @@ public class Image{
    **/
   public void addFile(String file){
     files.add(new File(file));
+    System.out.println("[ADD] `" + file + "`");
   }
 
   /**
