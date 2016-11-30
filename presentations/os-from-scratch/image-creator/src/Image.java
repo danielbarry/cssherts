@@ -224,6 +224,12 @@ public class Image{
     }else{
       bPos += writeSize;
     }
+    /* Jump over the table */
+    int tableSize = TABLESIZE;
+    if(TABLESIZE % CHUNKSIZE > 0){
+      tableSize += CHUNKSIZE - (TABLESIZE % CHUNKSIZE);
+    }
+    bPos += tableSize;
     /* TODO: Push resources into their respect positions. */
     /* TODO: Generate the file table to be used. */
     /* TODO: Validate the image that has been generated. */
