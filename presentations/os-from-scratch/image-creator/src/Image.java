@@ -303,6 +303,7 @@ public class Image{
    * explanation of the failure.
    **/
   private int loadBuffer(int offset, int chunkSize, byte[] buffer, File file){
+    /* TODO: Placement for floppy disks with >18 sectors being saved. */
     /* Calculate the padding */
     int paddedSize = (int)file.length();
     if(file.length() % chunkSize > 0){
