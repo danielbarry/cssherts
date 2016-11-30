@@ -64,7 +64,7 @@ public class Main{
                 /* Store the bootloader */
                 bootloader = args[x];
               }else{
-                System.err.println("Error: Cannot set bootloader.");
+                System.err.println("[ERR] Cannot set bootloader");
                 printHelp();
               }
               break;
@@ -80,7 +80,7 @@ public class Main{
                 /* Store the output */
                 output = args[x];
               }else{
-                System.err.println("Error: Cannot set output.");
+                System.err.println("[ERR] Cannot set output");
                 printHelp();
               }
               break;
@@ -114,7 +114,7 @@ public class Main{
       image.generate();
       System.out.println("[>>>] Finished generation");
     }else{
-      System.err.println("Error: Image is invalid, no image will be created.");
+      System.err.println("[ERR] Image is invalid, no image will be created");
     }
   }
 
