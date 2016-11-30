@@ -99,8 +99,6 @@ public class Main{
         }else{
           /* Add the file to the list of files */
           image.addFile(args[x]);
-          /* Let the user know on the terminal that the file was added */
-          System.out.println("[ADD] " + args[x]);
         }
       }
     }
