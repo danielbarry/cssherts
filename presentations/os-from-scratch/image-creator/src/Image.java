@@ -2,6 +2,7 @@ package barray.ic;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -212,10 +213,24 @@ public class Image{
     /* Generate a byte array the size of the target media */
     byte[] buffer = new byte[mediaSize];
     /* TODO: Generate the file table to be used. */
-    /* TODO: Create output stream. */
     /* TODO: Push resources down the output stream. */
-    /* TODO: Close the output stream. */
     /* TODO: Validate the image that has been generated. */
+    /* Create and write output stream */
+    FileOutputStream fos = null;
+    try{
+      fos = new FileOutputStream(output);
+      fos.write(buffer);
+    }catch(IOException e){
+      System.err.println("[ERR] Can't write to output file");
+      return false;
+    }
+    try{
+      if(fos != null){
+        fos.close();
+      }
+    }catch(IOException e){
+      /* Do nothing */
+    }
     return true;
   }
 }
