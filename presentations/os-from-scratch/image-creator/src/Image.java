@@ -10,6 +10,9 @@ import java.util.ArrayList;
  * arbitrary filesystem.
  **/
 public class Image{
+  private static final int BOOTSIZE = 512;
+  private static final int TABLESIZE = 512;
+
   private File bootloader;
   private File output;
   private ArrayList<File> files;
