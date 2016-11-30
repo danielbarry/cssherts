@@ -216,6 +216,6 @@ public class Image{
     /* TODO: Push resources down the output stream. */
     /* TODO: Close the output stream. */
     /* TODO: Validate the image that has been generated. */
-    return false;
+    return true;
   }
 }
