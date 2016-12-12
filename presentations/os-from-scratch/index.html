@@ -145,6 +145,86 @@ For this tool you will need the latest version of Java installed (Java 8 at the 
 
 NASM (Netwide Assembler) is a compiler for assembly into machine level code. This can be found both in the ZIP file which has been tested for every line featured here, or at [http://www.nasm.us/](http://www.nasm.us/) which is untested. The included version is a snapshot of multiple versions from their site and is unmodified, including all instructions and liscensing.
 
+## Basics
+
+Here, we run through the basics in order to make sure that we have the best chance of getting through the material. Feel free to skip through this material as you feel comfortable, for programmers, engineers and any person with a scientific background it is expected that this will be trivial. For those that are still here, we all had to start somewhere and now is as good a time as any.
+
+### Base
+
+If you are not aware about number bases, prepare to have your mind blown. Your whole life you have been using one without any particular reason and without any decision being made. Our ability to change between these bases will be useful later on.
+
+When you count, if you are Western you will count from zero to nine, before adding a number to the left and contuing. An example would be to have nine, add one and have 10. Zero to nine is only ten numbers, the reason for which is the number of fingers we have. For humans, it's easy to count using your fingers as tools for counting. Other places in the world use joints in the fingers, allowing them to increase the *base* of their counting system.
+
+Okay, so why is this interesting? Well, a computer really only has one finger. On or off. True or false. One or zero. Base 2. Binary. This makes counting interesting. We have zero and add one, now we have one. We have one and... Well, we have 10.
+
+Let us visualise this for 128. In base 10 (the one you were likely taught), we have the following:
+
+    100's 10's  1's
+        1    2    8
+
+To find out the number, we effectively do the following:
+
+    (100 x 1) +
+    ( 10 x 2) +
+    (  1 * 8) =
+    128
+
+Now we want to represent the base 10 number in base 2. We again visualise this:
+
+    128's 64's 32's 16's  8's  4's  2's  1's
+        1    0    0    0    0    0    0    0
+
+And this is calculated out to be:
+
+    (128 x 1) +
+    ( 64 x 0) +
+    ( 32 x 0) +
+    ( 16 x 0) +
+    (  8 x 0) +
+    (  4 x 0) +
+    (  2 x 0) +
+    (  1 x 0) =
+    128
+
+Hmm, this is interesting, but it takes more space? Well, computer scientists have this covered too - base 16, or hexadecimal. Base 16 is 0 to 15, which causes a problem. To solve this, new numbers are created. We now count 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, A, B, C, D, E, F.
+
+To put this into an example, we now see:
+
+    16's 1's
+       8   0
+
+And calculated out is:
+
+    ( 16 * 8) +
+    (  1 * 0) =
+    128
+
+Awesome, we saved a character when writing that number! When writing a lot of numbers, this will make some serious difference!
+
+But... There is an issue here. Using all these different bases cause confusion in some cases. The number 10 could be the following:
+
+    Base  2: ( 2 * 1) + ( 1 * 0) =  2 (in normal counting)
+    Base 10: (10 * 1) + ( 1 * 0) = 10 (in normal counting)
+    Base 16: (16 * 1) + ( 1 * 0) = 16 (in normal counting)
+
+There is a simple solution for this, in which we add some identification to the number in order for us to know which base we are dealing with. The following is the notation used:
+
+    Base  2: 10b ('b' for binary)
+    Base 10: 10 or 10d or 10.0 ('d' for decimal)
+    Base 16: 10h or 0x10 ('h' for hexidecimal)
+
+Hexadecimal (base 16) is typically the one used for computers as computers often work with bytes, a format that only requires two character to represent a number from 0 to 255, or 0h to FFh.
+
+### Basic Computer Math
+
+Now we start with some basic computer math so that we understand the computer instructions and logic to come. Very basic math is of course assumed and built upon.
+
+  * **/** or **//** = Integer Divide: An integer is a whole number, 1 is an integer but 1.5 isn't. `5/2` in this case would be 2, remainder 1. In this case we don't care about the remainder and integers don't deal with decimal places. The answer would be 2.
+  * **%** = Modulo or Modulus: `5%2` in this case would be 2, remainder 1 as before, but in this case we care about the remainder, therefore the answer is 1.
+  * **&lt;&lt;** = Bitshift Left: Shifts the digits in a binary number to the left and makes the right most digit a zero. An example would be `1101b&lt;&lt;1`, meaning we want to shift the binary number one place to the left. The answer in this case would be 1010b.
+  * **&gt;&gt;** = Bitshift Right: Shifts the digits in a binary number to the right and makes the left most digit a zero. An example would be `1011b&gt;&gt;1`, meaning we want to shift the binary number one place to the right. The answer in this case would be 0101b.
+
+If these concepts are still confusing, please take some time to reread and make sure that you are confident with these ideas. These, along with basic mathematical concepts will be very important in understanding what is happening as we build our own OS.
 
 ## Bootloader
 
