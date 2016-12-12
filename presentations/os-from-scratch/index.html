@@ -236,7 +236,12 @@ When a computer is booting, the first thing that will run is the BIOS software (
 
 ### RAM Layout
 
-**TODO:** Write this section.
+For now, we are only interested in the following:
+
+  * 0x0000:0000 to 0x0000:7C00 - Reserved for the BIOS and other low level code.
+  * 0x0000:7C00 - The position in RAM that the bootloader will be loaded into.
+
+In theory we have access to 1MB (One Mega Byte) of RAM (Random Access Memory) available to us, but due to simplicity we will only have access to a much smaller amount to prevent us having to switch the RAM space we are working in. At this low level, unfortunately we don't have the luck of getting any memory management, meaning that we have to be careful about how we use memory!
 
 ### Operations
 
