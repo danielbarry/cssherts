@@ -243,6 +243,23 @@ For now, we are only interested in the following:
 
 In theory we have access to 1MB (One Mega Byte) of RAM (Random Access Memory) available to us, but due to simplicity we will only have access to a much smaller amount to prevent us having to switch the RAM space we are working in. At this low level, unfortunately we don't have the luck of getting any memory management, meaning that we have to be careful about how we use memory!
 
+### Registers
+
+  * `AX` - Multiply, divide, load and store
+  * `BX` - Index register for move operations
+  * `CX` - Counting for operations and shifts
+  * `DX` - Port address for IN and OUT operations
+  * `SP` - Top of stack pointer
+  * `BP` - Bottom of stack pointer
+  * `SI` - Source index for streams
+  * `DI` - Destination index for streams
+  * `IP` - Instruction pointer
+  * Flags (see [https://en.wikipedia.org/wiki/FLAGS_register](https://en.wikipedia.org/wiki/FLAGS_register))
+
+More information on registers can be found [https://en.wikipedia.org/wiki/X86_assembly_language](https://en.wikipedia.org/wiki/X86_assembly_language).
+
+**NOTE:** Some registers may be processor specific - the fact they work on your machine or in a virtual machine does not mean they will work for a wide variety of hardware. Be sure to use the most generic instructions possible to make sure you have as large support as possible.
+
 ### Operations
 
 **TODO:** Write this section.
