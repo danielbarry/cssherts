@@ -285,7 +285,50 @@ Further information about operations can be found at [https://en.wikipedia.org/w
 
 ### Simple Bootloader
 
-**TODO:** Write this section.
+Now it's time to boot the first piece of code!
+
+First, write the following code to a file called `boot.asm`.
+
+    ; Align the code to the position in RAM we will load from
+    org 7C00h
+    boot_start:
+      ; TODO: Write some code here.
+    boot_stop:
+      ; Hump infinitely
+      jmp $
+    ; Pad out the bootloader to 510 bytes
+    times 0200h - 2 - ($ - $$) db 0
+    ; Add the boot signature to the code
+    boot_signature dw AA55h
+
+Now we will need access to the terminal, or this may be called "Command Prompt" or "Shell" depending on your machine. This will be different per operating system, so it's reccomended that you learn how to do this for yours. You will also need the ability to navigate the directories of the operating system via this terminal.
+
+Next, we will have to compile this code with the following command:
+
+    nasm boot.asm -o boot.bin
+
+This means that we are using the source file, `boot.asm`, and writing an output (`-o`) file, `boot.bin`.
+
+**NOTE:** If the terminal complains about the program `nasm` not existing, try moving your code to the same place that the `nasm` binary is located.
+
+A new file should now be located where you compiled your program. The next step will be to copy this file to the location of `ic.jar`, our image creator for this operating system. To use this program, run the following:
+
+    java -jar ic.jar *.bin
+
+This tells the temrinal to run `java`, the file we want to run is a JAR (`-jar`), the program to be run which is `ic.jar` and what to load into the program (`*.bin`). The `*` is a wildcard, meaning that any files we compile with the `.bin` extension on them will be included in the image generated.
+
+Once this program has complete, we should see some output such as:
+
+    [ADD] `boot.bin`
+    [DEL] `boot.bin`
+    [SET] bootloader -> boot.bin
+    [SET] output -> os.img
+    [SET] mediaSize -> 1474560
+    [>>>] Finished generation
+
+There should now be a new file called `os.img` in the directory. This is our floppy disk image! We will now need to load this image into the floppy disk section of our virtual machine. When we do so we should see that the it boots... That's it. Okay, it's not exciting - so let us create something more interesting!
+
+**NOTE:** If the virtual machine complains about not having an bootable media, it means that you have not mounted the files correctly. If you are not able to easily work this out, please use your favourite search engine to achieve this task for your specific virtual machine.
 
 ### Booting the Kernel
 
