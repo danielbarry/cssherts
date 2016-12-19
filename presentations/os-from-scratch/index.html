@@ -332,6 +332,116 @@ There should now be a new file called `os.img` in the directory. This is our flo
 
 **NOTE:** If the virtual machine complains about not having an bootable media, it means that you have not mounted the files correctly. If you are not able to easily work this out, please use your favourite search engine to achieve this task for your specific virtual machine.
 
+### Simple Printing Bootloader
+
+Next, we look to create a bootloader that does something more useful to us. In this case, we look to display some text with a basic printing function that we write. The below code is broken up with various comments about what each part is doing in more detail.
+
+    ; Align the code to the position in RAM we set ourselves
+    org 0h
+    
+
+The first notable difference, we have organised our code at offset `0x0000:0000`. This is because we orient ourselves from where this bootloader starts below.
+
+    ; boot_start()
+    ;
+    ; Starts the boot process.
+    boot_start:
+      mov ax, 08E0h
+      ; Disable interrupts while changing stack
+      cli
+      mov ss, ax
+      mov sp, 4096
+      ; Restore interrupts
+      sti
+    
+      ; Direction for string operations 'up' - incrementing addresses
+      cld
+    
+      ; Set all segments to match where kernel is loaded
+      mov ax, 07C0h
+      ; Handle the segments
+      mov ds, ax
+      mov es, ax
+      mov fs, ax
+      mov gs, ax
+    
+
+Here we can see we align our position in RAM by setting the offset of `0x0000:07C0` in the register `AX` and setting the various segment registers to the content of `AX`. This means that anything that is RAM position dependant before this code will not have the correct alignment, as the segments will still be at the start of RAM instead of our ofset.
+
+      ; Needed for some older BIOSes
+      mov eax, 0
+    
+
+Sometimes these quirks creep in, usually due to bad design at some stage. Possibly some BIOS assumed this would be set and as a result, other bootloaders must set this value in order to boot those machines.
+
+      ; Make sure we start in correct text mode
+      mov ax, 03h
+      int 10h
+    
+
+Before continuing, we want to make sure that we are in the right text mode to print an error or prompt if we have to. In normal operation we would start looking for a kernel - which may or may not be on the disk. The only thing we can assume is that the bootloader has been correctly loaded, everything else is a variable we must consider.
+
+    ; boot_main()
+    ;
+    ; The main code to be run in the boot process.
+    boot_main:
+      mov si, message
+      call boot_print
+    
+
+Here, we load the position in RAM of the message into the register `SI`, indicating the index of the source information. We then call our `boot_print` function to print the message.
+
+    ; boot_stop()
+    ;
+    ; Stops the bootloader from running.
+    boot_stop:
+      ; Hump infinitely
+      jmp $
+    
+
+When the above call to `boot_print` finsihes, it will continue execution to this code section. `jmp` tells the processor to start executing at a position, `$` indicating the current position. This means we have an infinite loop - there is no way to escape until the computer is switched off.
+
+    ; boot_print()
+    ;
+    ; Prints a string to the display.
+    ;
+    ; @param SI Position of the string.
+    boot_print:
+      pusha
+      mov ah, 0Eh
+    .repeat:
+      lodsb
+      int 10h
+      cmp al, 0
+      jne .repeat
+    .done:
+      popa
+      ret
+    
+
+`pusha` tells the processor to put all the general purpose registers onto the stack for safe keeping. `popa` in turn returns them from the stack, back into the general purpose registers. Next we see that we put `0Eh` into `AH` - this indicates the later intterupt should be to print some teletype text. This means the text will automatically wrap at the end of the display and will increment the cursor (the blinking line in the text editor so you know where the keyboard is) position.
+
+`lodsb` loads the next byte from the position indicated by `SI` into `AL`. `SI` is incremented every time it is called. `int 10h` is a video interrupt, in this case to print our character stored in `AL`. There are various others with advantages and disadvantages.
+
+We then compare the contents of `AL` to zero. If it's not equal to zero, we jump back to `.repeat` and continue printing. The jump is `jne`, standing for "jump if not equal". If `AL` is equal to zero, no jump occurs and the code runs through to `.done` section. At the end, we have `ret` to return to where we were called from.
+
+    message db 'Hello World!', 0
+    
+
+We store our message in bytes (`db`), with a terminator byte being `0` to indicate the end of the string.
+
+    ; Pad out the bootloader to 510 bytes
+    times 0200h - 2 - ($ - $$) db 0
+
+We pad the bootloader with zeros to make sure it is of the right size to be accepted.
+
+    ; Add the boot signature to the code
+    boot_signature dw 0AA55h
+
+The `boot_signature` is very simple way for the BIOS to know whether there is a valid bootloader to be loaded. Not all medium attached to the computer will contain runnable code - this is how the computer knows whether to execute the code or not.
+
+There we have it, our first interesting bootloader!
+
 ### Booting the Kernel
 
 **TODO:** Write this section.
