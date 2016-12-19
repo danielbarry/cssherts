@@ -301,7 +301,7 @@ First, write the following code to a file called `boot.asm`.
     ; Pad out the bootloader to 510 bytes
     times 0200h - 2 - ($ - $$) db 0
     ; Add the boot signature to the code
-    boot_signature dw AA55h
+    boot_signature dw 0AA55h
 
 Now we will need access to the terminal, or this may be called "Command Prompt" or "Shell" depending on your machine. This will be different per operating system, so it's reccomended that you learn how to do this for yours. You will also need the ability to navigate the directories of the operating system via this terminal.
 
