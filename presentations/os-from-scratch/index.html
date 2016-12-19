@@ -275,8 +275,10 @@ The following operations are not the complete set of possible operations, that l
   * `lodsb X` - Loads a byte from memory into X, the position denoted by registers.
   * `mov X, Y` - This instruction is short for "move" and moves the contents of Y into X, but Y remains the same.
   * `mul X` - **??**
-  * `pop X` - Pops the registers from the stack denoted by X.
-  * `push X` - Pushes registers to the stack denoted by X.
+  * `pop X` - Pops a register from the stack denoted by X.
+  * `popa` - Pops all the general purpose registers onto the stack.
+  * `push X` - Pushes a register to the stack denoted by X.
+  * `pusha` - Pushes all the general purpose registers to the stack.
   * `ret` - Stands for "return", allowing a return to the previous position of a call operation.
   * `stosb X` - Stores a byte from X into memory, the position denoted by registers.
   * `sub X, Y` - Subtracts Y from X and stores the result in X.
