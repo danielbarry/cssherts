@@ -517,6 +517,126 @@ For this to work, we are going to want some basic functions that we can use over
 
 Effectively, what we are aiming to do is build a small, read-only command line operating system so that we can load files into RAM and run them, in this case the kernel. We will also want to display an error message if we fail to boot for some reason and allow a user to type in a different kernel name from the default.
 
+Below is original bootloader with additions that will allow us to boot our kernel:
+
+    ; Align the code to the position in RAM we set ourselves
+    org 0h
+    
+    ; boot_start()
+    ;
+    ; Starts the boot process.
+    boot_start:
+      mov ax, 08E0h
+      ; Disable interrupts while changing stack
+      cli
+      mov ss, ax
+      mov sp, 4096
+      ; Restore interrupts
+      sti
+    
+      ; Direction for string operations 'up' - incrementing addresses
+      cld
+    
+      ; Set all segments to match where kernel is loaded
+      mov ax, 07C0h
+      ; Handle the segments
+      mov ds, ax
+      mov es, ax
+      mov fs, ax
+      mov gs, ax
+    
+      ; Needed for some older BIOSes
+      mov eax, 0
+    
+      ; Make sure we start in correct text mode
+      mov ax, 03h
+      int 10h
+    
+    ; boot_main()
+    ;
+    ; The main code to be run in the boot process.
+    boot_main:
+      mov si, msg_loading
+      call boot_print
+      mov cx, 2
+      mov si, position_table
+      call boot_load
+      mov si, position_table
+      call boot_print
+    
+    ; boot_stop()
+    ;
+    ; Stops the bootloader from running.
+    boot_stop:
+      ; Jump infinitely
+      jmp $
+    
+    ; boot_print()
+    ;
+    ; Prints a string to the display.
+    ;
+    ; @param SI Position of the string.
+    boot_print:
+      pusha
+      mov ah, 0Eh
+    .repeat:
+      lodsb
+      int 10h
+      cmp al, 0
+      jne .repeat
+    .done:
+      popa
+      ret
+    
+    ; boot_load()
+    ;
+    ; Load a sector from the disk.
+    ;
+    ; @param CX The sector to load from the disk.
+    ; @param SI The position to load the file into.
+    boot_load:
+      mov ax, 0201h
+      jmp boot_disk_manage
+    
+    ; boot_write()
+    ;
+    ; Write a sector to the disk.
+    ;
+    ; @param CX The sector to write to the disk.
+    ; @param SI The position to read the sector from.
+    boot_write:
+      mov ax, 0201h
+    
+    ; boot_disk_manage()
+    ;
+    ; Handle the disk operation.
+    ;
+    ; @param AL Number of sectors.
+    ; @param AH The disk mode to operate.
+    ; @param CX The sector to perform the operation on.
+    ; @param SI The position in RAM to perform the operqtion with.
+    boot_disk_manage:
+      push bx
+      push dx
+      mov dx, 0
+      mov bx, ds
+      mov es, bx
+      mov bx, si
+      int 13h
+      pop dx
+      pop bx
+      ret
+    
+    msg_loading db 'Loading...', 10, 13, 0
+    
+    ; Pad out the bootloader to 510 bytes
+    times 0200h - 2 - ($ - $$) db 0
+    ; Add the boot signature to the code
+    boot_signature dw 0AA55h
+    ; Positions of various important sections in RAM
+    position_table  equ 200h
+    position_kernel equ 400h
+
 ## Kernel
 
 **TODO:** Write this section.
