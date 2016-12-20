@@ -496,6 +496,13 @@ Compile the code as `kern.asm` and include it on the command line if the image c
 
 ### Booting the Kernel
 
+Now for the exciting part, we are finally going to boot our first kernel! First, we must think about the steps required in the boot process in order to get us there. We must do the following to boot the kernel:
+
+  1. Load the file table into RAM.
+  2. Search file table for the kernel entry, `kern`.
+  3. Load the kernel sectors into RAM.
+  4. Begin executing the kernel.
+
 **TODO:** Write this section.
 
 ## Kernel
