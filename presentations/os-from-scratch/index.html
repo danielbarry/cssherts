@@ -503,7 +503,19 @@ Now for the exciting part, we are finally going to boot our first kernel! First,
   3. Load the kernel sectors into RAM.
   4. Begin executing the kernel.
 
-**TODO:** Write this section.
+If we fail to load the kernel, we will want to do thefollowing steps after the previous third step:
+
+  4. Prompt to type in different filename.
+  5. Load different file into RAM.
+  6. Begin executing the kernel.
+
+For this to work, we are going to want some basic functions that we can use over and over:
+
+  * Abiltiy to load a file from a given position on the disk.
+  * String compare for searching for the file to be loaded once we have the file table loaded.
+  * Capture user string from keyboard
+
+Effectively, what we are aiming to do is build a small, read-only command line operating system so that we can load files into RAM and run them, in this case the kernel. We will also want to display an error message if we fail to boot for some reason and allow a user to type in a different kernel name from the default.
 
 ## Kernel
 
