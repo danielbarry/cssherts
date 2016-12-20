@@ -446,6 +446,54 @@ The `boot_signature` is very simple way for the BIOS to know whether there is a 
 
 There we have it, our first interesting bootloader!
 
+### Very Simple Kernel
+
+The below code is for a very simple kernel, something that we will not go through in detail her. As you can see, it very much looks like the bootloader code and you should be able to work out it's purpose.
+
+    ; Align the code to the position in RAM we will be loaded to
+    ; NOTE: We leave a 512 byte gap for the file table to be loaded.
+    org 400h
+    
+    ; kernel_start()
+    ;
+    ; Starts the kernel process.
+    kernel_start:
+    
+    ; kernel_main()
+    ;
+    ; The main code to be run in the kernel process.
+    kernel_main:
+      mov si, message
+      call kernel_print
+    
+    ; kernel_stop()
+    ;
+    ; Stops the kernel from running.
+    kernel_stop:
+      ; Hump infinitely
+      jmp $
+    
+    ; kernel_print()
+    ;
+    ; Prints a string to the display.
+    ;
+    ; @param SI Position of the string.
+    kernel_print:
+      pusha
+      mov ah, 0Eh
+    .repeat:
+      lodsb
+      int 10h
+      cmp al, 0
+      jne .repeat
+    .done:
+      popa
+      ret
+    
+    message db 'Hello World!', 0
+
+Compile the code as `kern.asm` and include it on the command line if the image creation utility.
+
 ### Booting the Kernel
 
 **TODO:** Write this section.
