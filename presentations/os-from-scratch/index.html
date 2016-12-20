@@ -298,7 +298,7 @@ First, write the following code to a file called `boot.asm`. We aren't going to 
     boot_start:
       ; TODO: Write some code here.
     boot_stop:
-      ; Hump infinitely
+      ; Jump infinitely
       jmp $
     ; Pad out the bootloader to 510 bytes
     times 0200h - 2 - ($ - $$) db 0
@@ -397,7 +397,7 @@ Here, we load the position in RAM of the message into the register `SI`, indicat
     ;
     ; Stops the bootloader from running.
     boot_stop:
-      ; Hump infinitely
+      ; Jump infinitely
       jmp $
     
 
@@ -470,7 +470,7 @@ The below code is for a very simple kernel, something that we will not go throug
     ;
     ; Stops the kernel from running.
     kernel_stop:
-      ; Hump infinitely
+      ; Jump infinitely
       jmp $
     
     ; kernel_print()
