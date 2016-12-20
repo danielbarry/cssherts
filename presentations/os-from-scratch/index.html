@@ -427,6 +427,8 @@ When the above call to `boot_print` finsihes, it will continue execution to this
 
 We then compare the contents of `AL` to zero. If it's not equal to zero, we jump back to `.repeat` and continue printing. The jump is `jne`, standing for "jump if not equal". If `AL` is equal to zero, no jump occurs and the code runs through to `.done` section. At the end, we have `ret` to return to where we were called from.
 
+**NOTE:** The `.` in front of the label means that the label is only in scope for the above label without a `.`. This means that the label cannot be referenced from outside it's scope.
+
     message db 'Hello World!', 0
     
 
