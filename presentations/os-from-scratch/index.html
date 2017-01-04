@@ -505,15 +505,13 @@ Now for the exciting part, we are finally going to boot our first kernel! First,
 
 If we fail to load the kernel, we will want to do thefollowing steps after the previous third step:
 
-  4. Prompt to type in different filename.
-  5. Load different file into RAM.
-  6. Begin executing the kernel.
+  4. Display error message.
+  5. Jump infinitely to prevent bad code execution.
 
 For this to work, we are going to want some basic functions that we can use over and over:
 
   * Abiltiy to load a file from a given position on the disk.
-  * String compare for searching for the file to be loaded once we have the file table loaded.
-  * Capture user string from keyboard
+  * A very simple comparison of a string and a position in the file table.
 
 Effectively, what we are aiming to do is build a small, read-only command line operating system so that we can load files into RAM and run them, in this case the kernel. We will also want to display an error message if we fail to boot for some reason and allow a user to type in a different kernel name from the default.
 
@@ -558,19 +556,45 @@ Below is original bootloader with additions that will allow us to boot our kerne
     boot_main:
       mov si, msg_loading
       call boot_print
+    
+      ; Load the file table into RAM
       mov cx, 2
       mov si, position_table
       call boot_load
-      mov si, position_table
-      call boot_print
     
+      ; Search the loaded file table
+      mov cx, 0
+      mov di, str_file
+      call boot_table_search
+    
+      ; Check that we managed to find a kernel
+      cmp cx, 0
+      je boot_stop
+    
+      ; Load the kernel into RAM
+      mov si, position_kernel
+      call boot_load
+    
+      ; Start executing our kernel
+      ; NOTE: We call the kernel encase the kernel does a bad return.
+      call position_kernel
+
+Above we have our boot logic, where we run through the steps we previosuly mentioned. A lot of code will jump to the kernel, which is tecnhically correct. The issue with this is when writing a potentially bad kernel, a bad `ret` could have unknown concequences. In our code, this simply writes an error to the display.
+
     ; boot_stop()
     ;
     ; Stops the bootloader from running.
     boot_stop:
+      ; Display an error message
+      mov si, msg_error
+      call boot_print
       ; Jump infinitely
       jmp $
-    
+
+Here, we are printing a message to indicate there has been an error - both for our use and the use of any potential user. A better system would print some error code for the purpose of debugging too.
+
+We should technically call the video mode interrupt encase somebody in the higher level decided to switch to a graphics code. Technically, the processor may even be in 32 or 64 bit mode, somethign that we should be able to test for.
+
     ; boot_print()
     ;
     ; Prints a string to the display.
@@ -588,6 +612,63 @@ Below is original bootloader with additions that will allow us to boot our kerne
       popa
       ret
     
+    ; boot_table_search()
+    ;
+    ; Search the filetable for a file and return it's position, otherwize zero.
+    ;
+    ; @param CX Offset to search from, starting from zero.
+    ; @return CX Sector containing the file, otherwise zero.
+    boot_table_search:
+      push ax
+      push bx
+      push dx
+      mov si, position_table
+    .loop:
+      inc cx
+      mov dx, 0
+    .check_pos_1:
+      lodsb
+      mov ah, [str_file + 0]
+      cmp al, ah
+      jne .check_pos_2
+      inc dx
+    .check_pos_2:
+      lodsb
+      mov ah, [str_file + 1]
+      cmp al, ah
+      jne .check_pos_3
+      inc dx
+    .check_pos_3:
+      lodsb
+      mov ah, [str_file + 2]
+      cmp al, ah
+      jne .check_pos_4
+      inc dx
+    .check_pos_4:
+      lodsb
+      mov ah, [str_file + 3]
+      cmp al, ah
+      jne .check_loop
+      inc dx
+    .check_find:
+      cmp dx, 4
+      je .done
+    .check_loop:
+      cmp cx, 512 / 4
+      jl .loop
+    .not_found:
+      mov cx, 0
+      jmp .done
+    .done:
+      pop dx
+      pop bx
+      pop ax
+      ret
+
+This method is by far the largest we've added so far, but is relatively simple. It's purpose is to find the position of a file on the disk, by checking for four letter filenames stored back-to-back in the file table. There are no folders, permissions, links - anything. Just a four character filename and where it points to.
+
+What this method does is simple, it tests each character one by one and collects the number of matched chracters in `DX`, so that we know we have a full match if we have 4 characters. This code isn't as efficient as it could be, but it is easy to understand given some time to read through it. A more complex version would use a proper implementation of a string comparison.
+
     ; boot_load()
     ;
     ; Load a sector from the disk.
@@ -614,7 +695,7 @@ Below is original bootloader with additions that will allow us to boot our kerne
     ; @param AL Number of sectors.
     ; @param AH The disk mode to operate.
     ; @param CX The sector to perform the operation on.
-    ; @param SI The position in RAM to perform the operqtion with.
+    ; @param SI The position in RAM to perform the operation with.
     boot_disk_manage:
       push bx
       push dx
@@ -626,16 +707,29 @@ Below is original bootloader with additions that will allow us to boot our kerne
       pop dx
       pop bx
       ret
-    
+
+We implement both read and write functions to disk as they are extremely similar - almost no cost to having both exist. The function simply correctly sets registers and uses `int 13h` to perform the disk operation. As you may imagine, the time this was written meant that it was very much designed to be used with a floppy drive, hence is a very limited way to communicate with devices.
+
     msg_loading db 'Loading...', 10, 13, 0
+    msg_error   db 'Error', 10, 13, 0
+    str_file    db 'kern', 0
     
     ; Pad out the bootloader to 510 bytes
     times 0200h - 2 - ($ - $$) db 0
     ; Add the boot signature to the code
     boot_signature dw 0AA55h
+    
     ; Positions of various important sections in RAM
     position_table  equ 200h
     position_kernel equ 400h
+
+Congratulations, we can now boot our simple kernel successfully! There are some things we should bare in mind now that we are loading files:
+
+  * Our floppy disk is not compatible with any operating system, it's very custom!
+  * The kernel with this system can only be 512 bytes or less in size, anything larger and it will not be loaded. This is the same limitation with all files with this read method.
+  * We can only load a small number of files onto the disk as the filetable is very small. A larger file table will allow for more files.
+
+**NOTE:** The limitation of the kernel size can be fixed later with the addition of loop to keep searching for a file of the same name on the disk. This does make our task more complex as we must then loop to find files which may be fragmented. Another complication is with removal, addition or editing files as we can no longer easily make any assertions about the files without loading them. With this filesystem, it's costly to check the size of a file for example. Modern operating systems typically precompute these values and have them with the filename making searching much easier. In fact, almost all data that doesn't require you to load the file to disk will be stored outside of the file.
 
 ## Kernel
 
